@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag;
+using NSwag.AspNetCore;
 
 namespace PunchClock
 {
@@ -25,6 +26,12 @@ namespace PunchClock
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
+            });
+            services.AddSwaggerDocument(config => {
+                config.PostProcess = document => {
+                    document.Info.Title = "Punch Clock System";
+                    document.Info.Description = "API to control employees punch clock";
+                };
             });
         }
 
@@ -58,6 +65,10 @@ namespace PunchClock
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            //UseSwagger need to be before UseSpa.
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
@@ -70,6 +81,7 @@ namespace PunchClock
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
         }
     }
 }
