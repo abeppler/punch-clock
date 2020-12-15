@@ -17,5 +17,10 @@ namespace PunchClock.Domain.Entities
             Id = viewModel.Id;
             Name = viewModel.Name;
         }
+
+        public void UpdateProperties(Employee employee) 
+        {
+            Name = employee.Name;
+        }
     }
 }

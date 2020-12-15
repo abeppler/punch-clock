@@ -32,6 +32,9 @@ namespace PunchClock
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.RegisterServices();
+
             services.AddSwaggerDocument(config => {
                 config.PostProcess = document => {
                     document.Info.Title = "Punch Clock System";
