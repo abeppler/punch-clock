@@ -10,12 +10,15 @@ export class FetchDataComponent {
   public employees: Employee[];
   public punches: Punch[];
   
+  public selectedEmployeeId: string;
+
   private _baseUrl: string;
   private _httpClient : HttpClient;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this._baseUrl = baseUrl;
     this._httpClient = http;
+    this.selectedEmployeeId = "";
 
     http.get<WeatherForecast[]>(baseUrl + 'weatherforecast')
       .subscribe(result => {
@@ -25,11 +28,6 @@ export class FetchDataComponent {
     http.get<Employee[]>(baseUrl+'employee')
         .subscribe(result => {
           this.employees = result;
-
-          if (this.employees.length > 0) {
-            this.fetchPunches(this.employees[0].id);
-          }
-
         }, error => console.error(error));
   }
 
@@ -37,8 +35,11 @@ export class FetchDataComponent {
     this._httpClient.get<Punch[]>(this._baseUrl+`punch/${employeeId}`)
       .subscribe(result => {
         this.punches = result;
-        console.table(this.punches);
       }, error => console.error(error));    
+  }
+
+  registerPunch(){
+    alert(this.selectedEmployeeId);
   }
 }
 

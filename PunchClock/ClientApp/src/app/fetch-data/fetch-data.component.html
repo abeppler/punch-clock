@@ -1,32 +1,50 @@
 <h1 id="tableLabel">Punches by Employee</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
-
 <p *ngIf="!forecasts"><em>Loading...</em></p>
 
-<select name="employees" id="employees" (change)='fetchPunches($event.target.value)'>
-  <option *ngFor="let employee of employees" [value]="employee.id">
-    {{employee.name}}
-  </option>
-</select>
-
-
-<div *ngIf="!punches || punches.length == 0">
-  There's no punches to the selected employee.
-</div>
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="punches && punches.length > 0">
-  <thead>
-    <tr>
-      <th>Employee</th>
-      <th>Date</th>
-      <th>Punch Type</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let punch of punches">
-      <td>{{ punch.employeeName }}</td>
-      <td>{{ punch.dateTime }}</td>
-      <td>{{ punch.punchType }}</td>
-    </tr>
-  </tbody>
-</table>
+<form>
+  <div class="form-row form-group">
+    <div class="col-sm-6">
+      <label for="employees" class="col-form-label">
+        Employee:
+      </label>
+      <select class="form-control" name="employees" id="employees"
+        (change)='fetchPunches($event.target.value)'
+        [(ngModel)]="selectedEmployeeId">
+        <option value="" disabled selected hidden>Select an employee...</option>
+        <option *ngFor="let employee of employees" [value]="employee.id">
+          {{employee.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row form-group">
+    <div class="col-sm-4">
+      <button type="button" class="form-control btn btn-primary" (click)="registerPunch()">
+        Register Punch!
+      </button>
+    </div>
+  </div>
+  <div *ngIf="selectedEmployeeId === ''">
+    There's no selected employee.
+  </div>
+  <div *ngIf="selectedEmployeeId !== '' && punches.length == 0">
+    There's no punches to the selected employee.
+  </div>
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="punches && punches.length > 0">
+    <thead>
+      <tr>
+        <th>Employee</th>
+        <th>Date</th>
+        <th>Punch Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let punch of punches">
+        <td>{{ punch.employeeName }}</td>
+        <td>{{ punch.dateTime }}</td>
+        <td>{{ punch.punchType }}</td>
+      </tr>
+    </tbody>
+  </table>
+</form>
