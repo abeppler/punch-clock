@@ -8,7 +8,7 @@
       <label for="employees" class="col-form-label">
         Employee:
       </label>
-      <select class="form-control" name="employees" id="employees"
+      <select class="form-control has-error" [class.is-invalid]="selectedEmployeeId === ''" name="employees" id="employees" required
         (change)='fetchPunches($event.target.value)'
         [(ngModel)]="selectedEmployeeId">
         <option value="" disabled selected hidden>Select an employee...</option>
@@ -16,6 +16,9 @@
           {{employee.name}}
         </option>
       </select>
+      <small class="text-danger" *ngIf="selectedEmployeeId === ''">
+        There's no selected employee.
+      </small>      
     </div>
   </div>
   <div class="form-row form-group">
@@ -25,9 +28,7 @@
       </button>
     </div>
   </div>
-  <div *ngIf="selectedEmployeeId === ''">
-    There's no selected employee.
-  </div>
+
   <div *ngIf="selectedEmployeeId !== '' && punches.length == 0">
     There's no punches to the selected employee.
   </div>

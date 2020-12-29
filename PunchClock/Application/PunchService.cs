@@ -6,6 +6,7 @@ using PunchClock.Domain.Repository;
 using PunchClock.Domain.Services;
 using PunchClock.Domain.ViewModel;
 using System.Linq;
+using PunchClock.Domain.Entities.Enums;
 
 namespace PunchClock.Application
 {
@@ -25,13 +26,28 @@ namespace PunchClock.Application
                 DateTime = x.DateTime,
                 EmployeeId = x.EmployeeId,
                 EmployeeName = x.Employee.Name,
-                PunchType = x.PunchType == Domain.Entities.Enums.PunchType.PunchIn ? 'E' : 'S'
+                PunchType = ConvertToPunchTypeChar(x.PunchType)
             })
             .ToList();
         }
 
+        private char ConvertToPunchTypeChar(PunchType punchType)
+        {
+            switch (punchType)
+            {
+                case PunchType.PunchIn:
+                    return 'E';
+                    
+                case PunchType.PunchOut:
+                    return 'S';
+
+                default:
+                    return '0';
+            }
+        }
+
         public Task Register(PunchViewModel punchViewModel)
-        {            
+        {
             var punch = new Punch(punchViewModel);
             return _punchRepository.Save(punch);
         }

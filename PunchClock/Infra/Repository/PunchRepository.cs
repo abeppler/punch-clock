@@ -31,17 +31,24 @@ namespace PunchClock.Infra.Repository
 
         public Task Save(Punch punch)
         {
-            if (punch.Id == Guid.Empty)
+            try
             {
-                _context.Punches.Add(punch);
-            } 
-            else
-            {
-                var punchToUpdate = _context.Punches.First(x => x.Id == punch.Id);
-                punchToUpdate.UpdateProperties(punch);
-            }
+                if (punch.Id == Guid.Empty)
+                {
+                    _context.Punches.Add(punch);
+                } 
+                else
+                {
+                    var punchToUpdate = _context.Punches.First(x => x.Id == punch.Id);
+                    punchToUpdate.UpdateProperties(punch);
+                }
 
-            return _context.SaveChangesAsync();
+                return _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Occured an error trying to save the punch.", ex);
+            }
         }
     }
 }

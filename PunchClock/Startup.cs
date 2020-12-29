@@ -8,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.AspNetCore;
 using PunchClock.Infra.Data;
+using PunchClock.Infra.JsonConverter;
+using FluentValidation.AspNetCore;
+using PunchClock.Controllers.Filters;
 
 namespace PunchClock
 {
@@ -26,7 +29,17 @@ namespace PunchClock
             services.AddDbContext<PunchClockContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(opt => {
+                opt.JsonSerializerOptions.Converters.Add(new GuidJsonConverter());
+            });
+
+            services.AddMvc(options => {
+                options.Filters.Add(new ValidationFilter());
+            })
+            .AddFluentValidation(options => {
+                options.RegisterValidatorsFromAssemblyContaining<Startup>();
+            });
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

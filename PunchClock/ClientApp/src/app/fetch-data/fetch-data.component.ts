@@ -32,14 +32,26 @@ export class FetchDataComponent {
   }
 
   fetchPunches(employeeId: string){
-    this._httpClient.get<Punch[]>(this._baseUrl+`punch/${employeeId}`)
+    let fetchPunchByEmployeeUrl = `${this._baseUrl}punch/${employeeId}`;
+    console.log(fetchPunchByEmployeeUrl);
+    this._httpClient.get<Punch[]>(fetchPunchByEmployeeUrl)
       .subscribe(result => {
         this.punches = result;
       }, error => console.error(error));    
   }
 
   registerPunch(){
-    alert(this.selectedEmployeeId);
+    if (this.selectedEmployeeId === '') {
+      alert('There is invalid data.');
+    } else  {
+      let registerPunchUrl = `${this._baseUrl}punch`;
+      this._httpClient
+      .post<any>(registerPunchUrl, { EmployeeId: this.selectedEmployeeId })
+      .subscribe(res => this.fetchPunches(this.selectedEmployeeId), err => {
+        alert(err.message);
+        console.log(err);
+      });
+    }
   }
 }
 

@@ -23,7 +23,7 @@ namespace PunchClock.Domain.ViewModel
                         return PunchClock.Domain.Entities.Enums.PunchType.PunchOut;
 
                     default:
-                        throw new FormatException("Unknown punch type.");
+                        return PunchClock.Domain.Entities.Enums.PunchType.None;
                 }
             }
         }

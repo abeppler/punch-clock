@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PunchClock.Domain.Services;
 using PunchClock.Domain.ViewModel;
 using PunchClock.Dto;
+using PunchClock.Dto.Validators;
 
 namespace PunchClock.Controllers
 {
@@ -31,6 +32,13 @@ namespace PunchClock.Controllers
         {
             try
             {
+                var validator = new PunchDtoValidator();
+                var result = validator.Validate(punchDto);
+                if (!result.IsValid)
+                {
+                    return BadRequest(result.Errors);
+                }
+
                 var punchViewModel = new PunchViewModel 
                 {
                     EmployeeId = punchDto.EmployeeId,
