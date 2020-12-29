@@ -29,6 +29,14 @@ namespace PunchClock.Infra.Repository
                 .Where(x => x.EmployeeId == employeeId)
                 .ToListAsync();
 
+        public Task<Punch> GetLastPunchForToday(Guid employeeId)
+        {
+            return _context.Punches
+                .Where(x => x.DateTime.Date == DateTime.Now.Date && x.EmployeeId == employeeId)
+                .OrderByDescending(x => x.DateTime)
+                .FirstOrDefaultAsync();
+        }
+
         public Task Save(Punch punch)
         {
             try

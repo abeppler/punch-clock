@@ -11,6 +11,7 @@ using PunchClock.Infra.Data;
 using PunchClock.Infra.JsonConverter;
 using FluentValidation.AspNetCore;
 using PunchClock.Controllers.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace PunchClock
 {
@@ -27,7 +28,9 @@ namespace PunchClock
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<PunchClockContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options
+                    .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews().AddJsonOptions(opt => {
                 opt.JsonSerializerOptions.Converters.Add(new GuidJsonConverter());

@@ -7,6 +7,7 @@ using PunchClock.Domain.Services;
 using PunchClock.Domain.ViewModel;
 using System.Linq;
 using PunchClock.Domain.Entities.Enums;
+using FluentValidation;
 
 namespace PunchClock.Application
 {
@@ -49,6 +50,26 @@ namespace PunchClock.Application
         public Task Register(PunchViewModel punchViewModel)
         {
             var punch = new Punch(punchViewModel);
+            punch.DateTime = DateTime.UtcNow;
+
+            var lastPunchToday = _punchRepository.GetLastPunchForToday(punchViewModel.EmployeeId).Result;
+            if (lastPunchToday == null)
+            {
+                punch.PunchType = PunchType.PunchIn;
+            }
+            else
+            {
+                punch.PunchType = lastPunchToday.PunchType == PunchType.PunchIn ? PunchType.PunchOut : PunchType.PunchIn;                
+            }
+
+            var validator = new PunchValidator();
+            var result = validator.Validate(punch);
+            if (!result.IsValid)
+            {
+                var errorsMsg = string.Join(',', result.Errors.Select(x => x.ErrorMessage));
+                throw new ValidationException(errorsMsg);
+            }
+
             return _punchRepository.Save(punch);
         }
     }

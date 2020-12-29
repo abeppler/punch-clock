@@ -8,5 +8,6 @@ namespace PunchClock.Domain.Repository
     public interface IPunchRepository: IBaseRepository<Punch>
     {
         Task<List<Punch>> GetByEmployeeId(Guid employeeId);
+        Task<Punch> GetLastPunchForToday(Guid employeeId);
     }
 }

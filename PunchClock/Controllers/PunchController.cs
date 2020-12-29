@@ -43,7 +43,6 @@ namespace PunchClock.Controllers
                 {
                     EmployeeId = punchDto.EmployeeId,
                     EmployeeName = punchDto.EmployeeName,
-                    DateTime = punchDto.DateTime,
                     PunchType = punchDto.PunchType
                 };
 
